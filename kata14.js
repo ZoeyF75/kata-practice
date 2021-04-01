@@ -1,76 +1,70 @@
-let changeObj = {};
-
-const tens = function(change) {
-  if (change / 2000 > 1) {
-    changeObj.twentyDollars = Math.floor(change / 2000);
-    change -= changeObj.twentyDollars * 2000;
-  }
-  if (change / 1000 > 1) {
-    changeObj.tenDollars = Math.floor(change / 1000);
-    change -= changeObj.tenDollars * 1000;
-  } 
-  return change;
+const subtract = function(key, amount, container) {
+    container.changeObj[key] = Math.floor(container.change / amount); //adds keys to change object and value
+    container.change -= container.changeObj[key] * amount; //updates change
+    return container;
 }
 
-const ones = function (change) {
-  if (change / 500 > 1) {
-    changeObj.fiveDollars = Math.floor(change / 500);
-    change -= changeObj.fiveDollars * 500;
+//following function check divisibility and pass key name and change value to subtract, subtract does the actual calculation
+const tens = function(container) {
+  if (container.change / 2000 >= 1) { //change is divisible by $20
+    subtract("twentyDollars", 2000, container);
   }
-  if (change / 200 > 1) {
-    changeObj.twoDollars = Math.floor(change / 200);
-    change -= changeObj.twoDollars * 200;
+  if (container.change / 1000 >= 1) { //change is divisible by $10
+    subtract("tenDollars", 1000, container);
   } 
-  if (change / 100 > 1) {
-    changeObj.oneDollar = 1;
-    change -= changeObj.oneDollar * 100;
-  }
-  return change;
+  return container;
 }
 
-const tenths = function(change) {
-  if (change / 25 > 1) {
-    changeObj.quarter = Math.floor(change / 25);
-    change -= changeObj.quarter * 25;
+const ones = function (container) {
+  if (container.change / 500 >= 1) {
+    subtract("fiveDollars", 500, container); //change is divisible by $5
   }
-  if (change / 10 > 1) {
-    changeObj.dime = Math.floor(change / 10);
-    change -= changeObj.dime * 10;
+  if (container.change / 200 >= 1) { //change is divisible by $2
+    subtract("twoDollars", 200, container);
   } 
-  return change;
+  if (container.change / 100 >= 1) { //change is divisible by $1
+    subtract("oneDollar", 100, container);
+  }
+  return container;
 }
 
-const hundreths = function(change) {
-  if (change / 5 > 1) {
-    changeObj.nickel = Math.floor(change / 5);
-    change -= changeObj.nickel * 5;
+const tenths = function(container) {
+  if (container.change / 25 >= 1) { //change is divisible by quarter
+    subtract("quarter", 25, container);
   }
-  if (change / 1 > 1) {
-    changeObj.penny = Math.floor(change / 1);
-    change -= changeObj.penny * 1;
+  if (container.change / 10 >= 1) { //change is divisible by dime
+    subtract("dime", 10, container);
   } 
-  return change;
+  return container;
+}
+
+const hundreths = function(container) {
+  if (container.change / 5 >= 1) { //change is divisible by nickel
+    subtract("nickel", 5, container);
+  }
+  if (container.change / 1 >= 1) { //change is divisible by penny
+    subtract("penny", 1, container);
+  } 
+  return container;
 }
 
 const calculateChange = function(total, cash) {
-  let change = cash - total;
-  if (change.toString().length >= 4) { //4 digits or more twenty's and ten's
-    change = tens(change);
+  let container = {};
+  container.changeObj = {};
+  container.change = cash - total;
+  if (container.change.toString().length >= 4) { //4 digits or more twenty's and ten's
+    tens(container);
   }
-  console.log(changeObj);
-  if (change.toString().length === 3) { //3 digits toony or loony
-      change = ones(change);
+  if (container.change.toString().length === 3) { //3 digits toony or loony
+    ones(container);
   }
-  console.log(changeObj);
-  if (change.toString().length === 2) { //2 digits quarter or dime
-    change = tenths(change);
+  if (container.change.toString().length === 2) { //2 digits quarter or dime
+    tenths(container);
   }
-  console.log(changeObj);
-  if (change.toString().length === 1) { //1 digit nickel or penny
-    change = hundreths(change);
+  if (container.change.toString().length === 1) { //1 digit nickel or penny
+    hundreths(container);
   }
-  console.log(changeObj);
-  return changeObj;
+  return container.changeObj;
 };
 
 console.log(calculateChange(1787, 2000)); 
