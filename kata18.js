@@ -1,39 +1,31 @@
 const formulateSquare = function(message) {
   message = message.replace(/\s/g, ""); //remove all spaces
-  let sections = "";
+  let sections = [];
   let lettersPerRow = Math.ceil(Math.sqrt(message.length));
-  let splitPoints = [lettersPerRow, ];
-  for (let i = 0; i < message/length; i++) {
-   
-
-  splitPoints.fo
-  // for (let i = 0; i < lpc; i++) {
-  //   for (let line = 0; line < lpr; line++) {
-  //     row += message[index];
-  //     index++;
-  //     // if (i === lpc - 1) line += 1; //if last row add difference of missing letters
-  //   }
-  //   row += "\n";
-  // }
-  // return row;
+  let splitPoints = [];
+  for (let i = lettersPerRow; i < message.length; i += lettersPerRow) {
+   splitPoints.push(i); //adds multiple of letters per column to split message intro rows
+  }
+  splitPoints.push(message.length); //adds last split point for the complete message
+  let prev = 0;
+  splitPoints.forEach(point => {
+    sections.push(message.slice(prev, point));
+    prev = point;
+  })
+  return sections;
 }
 
 const squareCode = function(message) {
-  // let lettersPerRow = Math.ceil(Math.sqrt(message.length));
-  // let numberOfRows = Math.ceil(message.length / lettersPerRow);
+  let column = Math.ceil(Math.sqrt(message.length));
   const square = formulateSquare(message);
-  // const rows = square.split("\n");
-  // rows.pop(); //gets rid of added space
-  // console.log(square, rows);
-  // let encodedMessage = "";
-  
-  // for (let i = 0; i < rows[0].length; i++) { //runs 4 times 
-  //   for (let j = 0; j < rows.length; j++) { //needs to run 3, 3, 2, 2
-  //     if (rows[j][i]) encodedMessage += rows[j][i];
-  //   }
-  //   encodedMessage += " ";
-  // }
-  // return encodedMessage;
+  let encodedMessage = "";
+  for (let i = 0; i < column; i++) {
+    square.forEach(section => {
+      if (section[i]) encodedMessage += section[i]; //for each section if column exists add to ecoded message
+    })
+    encodedMessage += " ";
+  }
+  return encodedMessage;
 };
 
 console.log(squareCode("chill out"));
