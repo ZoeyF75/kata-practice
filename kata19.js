@@ -12,26 +12,63 @@ const generateBoard = (w, b) => {
   return board;
 }
 
-const rowThreat = (board) => {
-  let count = 0;
-  board.forEach(row => {
-    count += row;
-  });
-  return count > 1 ? true : false;
+const rowThreat = () => {
+  return whiteQueen[0] === blackQueen[0];
 }
 
-const columnThreat = (board) => {
-  return whiteQueen[1] === blackQueen[1] ? true : false;
+const columnThreat = () => {
+  return whiteQueen[1] === blackQueen[1];
+}
+
+const upLeft = (board, x, y) => {
+  let intersection = false;
+  while (x >= 0 && y >= 0) {
+    x--;
+    y--;
+    x >= 0 && y >= 0 ? board[x][y] === 1 ? intersection = true: console.log("not a match"): intersection ? console.log("match found") : console.log("no diagnal matches, up and to the left");
+  }
+  return intersection
+}
+
+const upRight = (board, x, y) => {
+  let intersection = false;
+  while (x >= 0 && y < 8) {
+    x--;
+    y++;
+    x >= 0 && y < 8 ? board[x][y] === 1 ? intersection = true: console.log("not a match"): intersection ? console.log("match found") :console.log("no diagnal matches, up and to the right");
+  }
+  return intersection
+}
+
+const downLeft = (board, x, y) => {
+  let intersection = false;
+  while (x < 8 && y >= 0) {
+    x++;
+    y--;
+    x < 8 && y >= 0 ? board[x][y] === 1 ? intersection = true: console.log("not a match"): intersection ? console.log("match found") :console.log("no diagnal matches, down and to the left");
+  }
+  return intersection
+}
+
+const downRight = (board, x, y) => {
+  let intersection = false;
+  while (x < 8 && y < 8) {
+    x++;
+    y++;
+    x < 8 && y < 8 ? board[x][y] === 1 ? intersection = true: console.log("not a match"): intersection ? console.log("match found") :console.log("no diagnal matches, down and to the right");
+  }
+  return intersection
 }
 
 const DiagonalThreat = (board) => {
-  return false;
+  let x = whiteQueen[0];
+  let y = whiteQueen[1];
+  return upLeft(board, x, y) ? true : upRight(board, x ,y) ? true : downLeft(board, x, y) ? true : downRight(board, x, y);
 }
 
 const queenThreat = (board) => {
-  return rowThreat(board) ? true: columnThreat(board)? true : DiagonalThreat(board);
+  return rowThreat() ? true: columnThreat()? true : DiagonalThreat(board);
 }
-
 
 let whiteQueen = [0, 5];
 let blackQueen = [5, 0];
